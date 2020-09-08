@@ -47,8 +47,21 @@
             function start(demande) {
             var user =  new Discord.Client();
             user.on('message', message => {
-                if(message.content === '<@!' + user.user.id + '>' && document.getElementById("autoreply_check").checked){
-                message.channel.send("<@!" + user.user.id + "> : " + document.getElementById("autoreply").value)
+                if(message.content.includes('<@!' + user.user.id + '>') && document.getElementById("autoreply_check").checked){
+                message.channel.send("<@!" + message.member.id + "> : " + document.getElementById("autoreply").value)
+                }
+                if(message.content.includes("selfbot-about")){
+                    const embed = new Discord.MessageEmbed()
+	.setColor('#0099ff')
+	.setTitle('Selfbot v1 - Notaryz')
+	.setURL('https://habbo-dev.fr/membre/6595-notaryz/')
+	.addFields(
+		{ name: 'Librairies utilisées', value: 'jQuery\nDiscord.JS' },
+		{ name: 'Version', value: '1' },
+		{ name: 'Remerciements', value: ' - JS Foundation\n - Discord.Js developers'},
+	)
+	.setTimestamp()
+    message.channel.send(embed)
                 }
             });
     user.login(document.getElementById("token").value);
