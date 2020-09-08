@@ -1,0 +1,95 @@
+<DOCTYPE html>
+    <head>
+        <title>Selfbot - Notaryz</title>
+        <script type="text/javascript" src="discord.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    </head>
+    <body>
+        <input type="text" id="token" placeholder="Ton token ici" />
+        <input type="button" id="start" onclick="start()" value="Se connecter" />
+        <br />
+        <div id="options" style="display: none;">
+        <p style="text-align: center">Connecté : <span id="userpseudo"></span></p>
+        AFK Mode
+        <input type="checkbox" id="autoreply_check" onclick="checkedBox()" />
+        <input type="text" name="autoreply" id="autoreply" placeholder="Votre message ici" style="margin-top:25px" />
+        <br />
+        <select id="activitylist">
+        <option value="PLAYING">Joue à</option>
+        <option value="STREAMING">Stream</option>
+        <option value="LISTENING">Écoute</option>
+        </select>
+        <input type="text" id="activitystring" placeholder="Message que tu souhaites ajouter à ton status" />
+        Cliquez la checkbox pour appliquer le status
+        <input type="checkbox" id="activitysend" value="" />
+        <br />
+        <select id="statuslist">
+            <option value="online">En ligne</option>
+            <option value="idle">Inactif</option>
+            <option value="invisible">Invisible</option>
+            <option value="dnd">Ne pas déranger</option>
+            </select>
+        <input type="checkbox" id="statusend" value="" /> Cliquez la checkbox pour appliquer le status
+        </div>
+        <script>
+        
+            console.log('%cSelfbot %cby %cNotaryz', 'color: #33ccff;font-size: xxx-large', 'color: #009999;font-size: xxx-large', 'color: #33ccff;font-size: xxx-large');
+            console.log('%cTous droits réservés ‎\u00a9 2020 - ne changez pas le copyright !', 'color: #009999')
+            function checkedBox() {
+                var checkbox = document.getElementById('autoreply_check');
+                if (checkbox.checked == true && document.getElementById("autoreply").value === '')
+                {
+                    alert('Veuillez mettre un message !')
+                    checkbox.checked = false
+                }
+            }
+            
+            function start(demande) {
+            var user =  new Discord.Client();
+            user.on('message', message => {
+                if(message.content === '<@!' + user.user.id + '>' && document.getElementById("autoreply_check").checked){
+                message.channel.send("<@!" + user.user.id + "> : " + document.getElementById("autoreply").value)
+                }
+            });
+    user.login(document.getElementById("token").value);
+    user.on('ready', () => {
+            showhide("options")
+            document.getElementById("userpseudo").innerHTML = user.user.username + user.user.tag
+            });
+
+            $('#activitysend').change(function() {
+    if (this.checked) {
+        var activitystr = document.getElementById("activitystring").value
+        var activityval = document.getElementById("activitylist").value
+        if(activitystr.value === ''){
+            alert('Veuillez entrer un status correct !')
+        } else {
+        user.user.setActivity(activitystr, { type: activityval})
+        }
+    } else {
+        user.user.setActivity()
+    }
+
+
+});
+
+$('#statusend').change(function() {
+    if (this.checked) {
+        var activityval = document.getElementById("statuslist").value
+        user.user.setStatus(activityval)
+        }
+});
+
+
+            }
+            function showhide(id) {
+  var x = document.getElementById(id);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+        </script>
+    </body>
+    </DOCTYPE>
